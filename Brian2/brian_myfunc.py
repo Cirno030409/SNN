@@ -42,17 +42,17 @@ def visualise_network(S: dict):
     """
     neuron_num = [len(S[key].source) for key in S.keys()]  # 各層のニューロン数を格納
     neuron_num.append(len(list(S.values())[-1].target))  # 最後の層のニューロン数を格納
-    print("neuron_num: ", neuron_num)
+    # print("neuron_num: ", neuron_num)
     extents = nx.utils.pairwise(itertools.accumulate((0,) + tuple(neuron_num)))
     layers = [range(start, end) for start, end in extents]
-    print("layers:", layers)
+    # print("layers:", layers)
 
     G = nx.Graph()
     for i, layer in enumerate(layers):  # 各層のニューロンをノードとして追加
         G.add_nodes_from(layer, layer=i)
     for layer_num in range(len(layers) - 1):  # 各層間のシナプスをエッジとして追加
         # layer_num : 層数
-        print("layer_num: ", layer_num)
+        # print("layer_num: ", layer_num)
         for j in range(len(S.keys())):
             # j : シナプス数
             synapse = S[list(S.keys())[layer_num]]  # シナプスのリストを取得
@@ -62,8 +62,8 @@ def visualise_network(S: dict):
                 x + neuron_num[layer_num] for x in synapse.j
             ]  # シナプスのターゲットニューロンのインデックスを取得(層のニューロン数を加算)
 
-            print("synapse_i    : ", synapse_i)
-            print("synapse_j_tmp: ", synapse_j_tmp)
+            # print("synapse_i    : ", synapse_i)
+            # print("synapse_j_tmp: ", synapse_j_tmp)
 
             # ２層目以降は，以前の層の文を加算する
             if layer_num > 0:
@@ -71,9 +71,9 @@ def visualise_network(S: dict):
                 synapse_i = [x + layer_num_sum for x in synapse_i]
                 synapse_j = [x + layer_num_sum for x in synapse_j]
 
-            print("[Calculated value is below]")
-            print("synapse_i    : ", synapse_i)
-            print("synapse_j    : ", synapse_j)
+            # print("[Calculated value is below]")
+            # print("synapse_i    : ", synapse_i)
+            # print("synapse_j    : ", synapse_j)
 
             synapse_con = []
             for i in range(len(synapse_i)):
@@ -81,7 +81,7 @@ def visualise_network(S: dict):
                     [synapse_i[i], synapse_j[i]]
                 )  # シナプスのソースニューロンとターゲットニューロンのインデックスをリストにしてリストに格納
             G.add_edges_from(synapse_con)  # シナプスをエッジとして追加
-            print("edge appended: ", synapse_con)
+            # print("edge appended: ", synapse_con)
 
     # for layer1, layer2 in nx.utils.pairwise(layers):
     #     G.add_edges_from(itertools.product(layer1, layer2))
@@ -92,4 +92,7 @@ def visualise_network(S: dict):
     plt.figure(figsize=(8, 8))
     nx.draw(G, pos, node_color=color, with_labels=False)
     plt.axis("equal")
+    
+    
+    plt.legend()
     plt.show()
